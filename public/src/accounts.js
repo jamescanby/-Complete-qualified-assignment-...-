@@ -7,21 +7,19 @@ function sortAccountsByLastName(accounts) {
 }
 
 function getTotalNumberOfBorrows(account, books) {
-  let total = 0;
-  books.forEach(singleBook => {
-    const found = singleBook.borrows.some((singleBorrow) => singleBorrow.id === account.id);
-    if (found){
-      total++;
+  return books.reduce((counter, singleBook) => {
+    if (singleBook.borrows.some(singleBorrow => singleBorrow.id === account.id)){
+      counter++;
     }
-  });
-  return total;
+    return counter;
+  },0);
 }
 
 function getBooksPossessedByAccount(account, books, authors) {
   //get all books taken out by an account
-  const accountBooks = books.filter(singleBook => singleBook.borrows.some(singleBorrow =>       
+  const accountBooks = books.filter(singleBook => singleBook.borrows.some((singleBorrow) =>       
     singleBorrow.id === account.id && singleBorrow.returned === false));
-  accountBooks.forEach((book) => {
+    accountBooks.forEach((book) => {
     book.author = authors.find((author) => author.id === book.authorId);
   })
   return accountBooks;
