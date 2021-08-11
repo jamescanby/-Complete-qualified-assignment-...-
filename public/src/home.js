@@ -10,18 +10,23 @@ function getBooksBorrowedCount(books) {
   const borrowed = books.filter((borrow) => borrow.borrows.some((borrow) => borrow.returned === false));
   return borrowed.length;
 }
+//Create a Helper Function
+function getTopFive(arrayOfObjects) { 
+  arrayOfObjects.sort((a,b) => b.count > a.count ? 1 : -1);
+  return arrayOfObjects.slice(0,5);
+}
 
 function getMostCommonGenres(books) {
-const counts = []
-//pull out all the genres
-const allGenres = books.map((book) => book.genre);
-const uniqueGenres = [...new Set(allGenres)];
-uniqueGenres.forEach((book) => {
-  const singleCount = books.filter((singleBook) => singleBook.genre === book).length;
-  counts.push({name: book, count: singleCount});
+  const counts = [];
+  //pull out all the genres
+  const allGenres = books.map((book) => book.genre);
+  const uniqueGenres = [...new Set(allGenres)];
+  uniqueGenres.forEach((book) => {
+    const singleCount = books.filter((singleBook) => singleBook.genre === book).length;
+      counts.push({name: book, count: singleCount});
   });
-counts.sort((a,b) => (b.count > a.count) ? 1 : -1);
-return counts.slice(0,5);
+  //Helper Function implemented here
+  return getTopFive(counts);
 }
 
 function getMostPopularBooks(books) {
@@ -31,9 +36,8 @@ function getMostPopularBooks(books) {
     //get the count for each
     counts.push({name: book.title, count: book.borrows.length});
   })
-  counts.sort((a,b) => (b.count > a.count) ? 1 : -1);
-  //limit to 5
-  return counts.slice(0,5);
+  //Helper Function implemented here
+  return getTopFive(counts);
 }
 
 function getMostPopularAuthors(books, authors) {
@@ -42,9 +46,8 @@ function getMostPopularAuthors(books, authors) {
     //get the count for each
     counts.push({id: book.authorId, count: book.borrows.length});
   })
-  counts.sort((a,b) => b.count - a.count);
-  //limit to 5
-  const topFive = counts.slice(0,5);
+  //Helper Function implemented here
+  const topFive = getTopFive(counts); 
   //attach the authors
   const authorList = [];
   topFive.forEach((author) => {
@@ -66,3 +69,4 @@ module.exports = {
   getMostPopularBooks,
   getMostPopularAuthors,
 };
+
